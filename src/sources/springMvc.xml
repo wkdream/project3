@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+
+	xmlns="http://www.springframework.org/schema/beans" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+http://www.springframework.org/schema/beans 
+http://www.springframework.org/schema/beans/spring-beans-4.0.xsd 
+
+http://www.springframework.org/schema/aop 
+http://www.springframework.org/schema/aop/spring-aop-4.0.xsd 
+
+http://www.springframework.org/schema/mvc
+http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd 
+
+http://www.springframework.org/schema/context 
+http://www.springframework.org/schema/context/spring-context-4.0.xsd
+
+http://www.springframework.org/schema/tx 
+http://www.springframework.org/schema/tx/spring-tx-4.0.xsd ">
+	<context:component-scan base-package="com.controllers" />
+	<mvc:annotation-driven />
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="suffix" value=".jsp" />
+	</bean>
+<mvc:resources location="/js/**" mapping="/js/**"/>
+<mvc:resources location="/css/**" mapping="/css/**"/>	
+<mvc:resources location="/fonts/**" mapping="/fonts/**"/>
+<mvc:resources location="/images/**" mapping="/images/**"/>
+<mvc:resources location="/jqurey/**" mapping="/jqurey/**"/>
+	
+	<mvc:interceptors>
+		<mvc:interceptor>
+		<mvc:mapping path="/**"/>
+			<mvc:exclude-mapping path="/login.action"/>
+			<mvc:exclude-mapping path="/register_user.action"/>
+			<mvc:exclude-mapping path="/updatePassword.action"/>
+			<bean class="com.interceptors.LoginInterceptors"/>
+		</mvc:interceptor>
+	</mvc:interceptors>
+	
+	
+	
+	
+	<mvc:annotation-driven>
+		<mvc:message-converters register-defaults="false">
+			<!-- 避免IE执行AJAX时,返回JSON出现下载文件 -->
+			<bean id="fastJsonHttpMessageConverter"
+				class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">
+				<property name="supportedMediaTypes">
+					<list>
+						<!-- 这里顺序不能反，一定先写text/html,不然ie下出现下载提示 -->
+						<value>text/html;charset=UTF-8</value>
+						<value>application/json;charset=UTF-8</value>
+					</list>
+				</property>
+			</bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+
+</beans>

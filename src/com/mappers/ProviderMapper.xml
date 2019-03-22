@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mappers.ProviderMapper">
+	<select id="getAllProviderByPage" parameterType="page" resultMap="list">
+			select * from t_provider where p_name like "%"#{provider.p_name}"%" limit #{startPageEmployee},#{pageSize}
+	</select>
+	<select id="findproviderlikeName" parameterType="String" resultMap="list">
+			select * from t_provider where p_name like "%"#{p_name}"%"
+	</select>
+	<select id="findAll" resultMap="list">
+		select * from t_provider
+	</select>
+	<select id="findproviderByName" parameterType="String" resultType="provider">
+		select * from t_provider where p_name=#{p_name}
+	</select>
+	<resultMap type="Provider" id="list">
+		<id property="p_id" column="p_id"/>
+		<result property="p_name" column="p_name"></result>
+		<result property="p_touch" column="p_touch"></result>
+		<result property="p_phone" column="p_phone"></result>
+		<result property="p_address" column="p_address"></result>
+	</resultMap>
+	<delete id="delProvider" parameterType="String">
+		delete from t_provider where p_id=#{p_id}
+	</delete>
+	<insert id="addProvider" parameterType="Provider">
+		insert into t_provider(p_id,p_name,p_touch,p_phone,p_address)
+		values(#{p_id},#{p_name},#{p_touch},#{p_phone},#{p_address})
+	</insert>
+	<update id="updateProvider" parameterType="provider">
+		update t_provider 
+		<set>
+			<if test="p_name != null and p_name != '' ">
+				p_name = #{p_name},
+			</if>
+			<if test="p_touch != null and p_touch != '' ">
+				p_touch = #{p_touch},
+			</if>
+			<if test="p_phone != null and p_phone != '' ">
+				p_phone = #{p_phone},
+			</if>
+			<if test="p_address != null and p_address != '' ">
+				p_address = #{p_address},
+			</if>
+		</set>
+		where p_id = #{p_id}
+	</update>
+</mapper>

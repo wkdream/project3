@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mappers.UserMapper">
+	<select id="getAllUserByPage" parameterType="page" resultMap="list">
+			select * from t_user where u_name like "%"#{user.u_name}"%" limit #{startPageEmployee},#{pageSize}
+	</select>
+	<select id="getAllUserByPagedelete" parameterType="page" resultMap="list">
+			select * from t_user limit #{startPageEmployee},#{pageSize}
+	</select>
+	<select id="findAll" resultMap="list">
+		select * from t_user
+	</select>
+	<select id="findUserByName" resultType="user" parameterType="String">
+		select * from t_user where u_name=#{u_name }
+	</select>
+	<select id="findListUserById" resultType="user" parameterType="Integer">
+		select * from t_user where u_id=#{u_id }
+	</select>
+	<select id="findListUserByName" resultMap="list" parameterType="String">
+		select * from t_user where u_name like "%"#{u_name}"%"
+	</select>
+	<resultMap type="User" id="list">
+		<result property="u_id" column="u_id"></result>
+		<result property="u_name" column="u_name"></result>
+		<result property="u_password" column="u_password"></result>
+		<result property="u_sex" column="u_sex"></result>
+		<result property="u_age" column="u_age"></result>
+		<result property="u_phone" column="u_phone"></result>
+		<result property="u_address" column="u_address"></result>
+		<result property="u_iden" column="u_iden"></result>
+	</resultMap>
+	<delete id="delUser" parameterType="String">
+		delete from t_user where u_id=#{u_id}
+	</delete>
+	<insert id="addUser" parameterType="User">
+		insert into
+		t_user(u_id,u_name,u_password,u_sex,u_age,u_phone,u_address,u_iden)
+		values(#{u_id},#{u_name},#{u_password},#{u_sex},#{u_age},#{u_phone},#{u_address},#{u_iden})
+	</insert>
+	<update id="updateUser" parameterType="User">
+		update t_user
+		<set>
+			<if test="u_id != null and u_id != '' ">
+				u_id = #{u_id},
+			</if>
+			<if test="u_name != null and u_name != '' ">
+				u_name = #{u_name},
+			</if>
+			<if test="u_password != null and u_password != '' ">
+				u_password = #{u_password},
+			</if>
+			<if test="u_sex != null and u_sex != '' ">
+				u_sex = #{u_sex},
+			</if>
+			<if test="u_age != null and u_age != '' ">
+				u_age = #{u_age},
+			</if>
+			<if test="u_phone != null and u_phone != '' ">
+				u_phone = #{u_phone},
+			</if>
+			<if test="u_address != null and u_address != '' ">
+				u_address = #{u_address},
+			</if>
+			<if test="u_iden != null and u_iden != '' ">
+				u_iden = #{u_iden}
+			</if>
+		</set>
+		where u_id = #{u_id}
+	</update>
+	<update id="updatePassword" parameterType="User">
+		update t_user set u_password=#{u_password} where u_name=#{u_name}	
+	</update>
+</mapper>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mappers.BillMapper">
+	<select id="findAll" resultMap="list">
+		select * from t_bill b,t_provider p where b.p_id=p.p_id
+	</select>
+	<select id="getAllBillLikeName" resultMap="list" parameterType="String">
+		select * from t_bill b,t_provider p where b.p_id=p.p_id and b.b_name like "%"#{b_name}"%"
+	</select>
+	<select id="getAllBillByName" resultMap="list" parameterType="String">
+		select * from t_bill b,t_provider p where b.p_id=p.p_id and b.b_name=#{b_name}
+	</select>
+	<select id="getAllBillByPage" resultMap="list" parameterType="page">
+		select * from t_bill b,t_provider p where b.p_id=p.p_id and b.b_name like "%"#{bill.b_name}"%" 
+		<choose>
+			<when test="bill.b_checkmoney!=null and bill.b_checkmoney != '' ">
+				and b.b_checkmoney=#{bill.b_checkmoney}
+			</when>
+			<otherwise>
+			and	1=1
+			</otherwise>
+		</choose>
+		limit #{startPageEmployee},#{pageSize}
+	</select>
+	<select id="selectBillByNAndC" resultMap="list" parameterType="bill">
+		select * from t_bill b,t_provider p where b.b_name like "%"#{b_name}"%" 
+		<choose>
+			<when test="b_checkmoney!=null and b_checkmoney != '' ">
+				and b.b_checkmoney=#{b_checkmoney}
+			</when>
+			<otherwise>
+				and 1=1
+			</otherwise>
+		</choose>
+		 and b.p_id=p.p_id
+	</select>
+	<resultMap type="Bill" id="list">
+		<id property="b_id" column="b_id"/>
+		<result property="b_name" column="b_name"/>
+		<result property="b_money" column="b_money"/>
+		<result property="b_miao" column="b_miao"/>
+		<result property="b_checkmoney" column="b_checkmoney"/>
+		<result property="b_quantity" column="b_quantity"/>
+		<result property="b_time" column="b_time"/>
+		<collection property="provider" ofType="Provider">
+			<id property="p_id" column="p_id"/>
+			<result property="p_name" column="p_name"/>
+		</collection>
+	</resultMap>
+	<delete id="delBill" parameterType="String">
+		delete from t_bill where b_id=#{b_id}
+	</delete>
+	<insert id="addBill" parameterType="Bill">
+		insert into t_bill(b_id,b_name,b_money,b_miao,b_checkmoney,b_quantity,b_time,p_id)
+		values(#{b_id},#{b_name},#{b_money},#{b_miao},#{b_checkmoney},#{b_quantity},#{b_time},#{provider.p_id})
+	</insert>
+	<update id="updateBill" parameterType="Bill">
+		update t_bill 
+		<set>
+			
+			<if test="b_name != null and b_name != '' ">
+				b_name = #{b_name},
+			</if>
+			<if test="b_money != null and b_money != '' ">
+				b_money = #{b_money},
+			</if>
+			<if test="b_miao != null and b_miao != '' ">
+				b_miao = #{b_miao},
+			</if>
+			<if test="b_checkmoney != null and b_checkmoney != '' ">
+				b_checkmoney = #{b_checkmoney},
+			</if>
+			<if test="b_quantity != null and b_quantity != '' ">
+				b_quantity = #{b_quantity},
+			</if>
+			<if test="b_time != null and b_time != '' ">
+				b_time = #{b_time},
+			</if>
+			<if test="provider.p_id != null and provider.p_id != '' ">
+				p_id = #{provider.p_id},
+			</if>
+		</set>
+		where b_id = #{b_id}
+	</update>
+</mapper>
